@@ -11,6 +11,7 @@ def number_extract(string):
 def trace_cable(wire, coord_list):
     x = 0
     y = 0
+    s = 0
     for a in wire:
         u = number_extract(a)
         if str(a).startswith("R"):
@@ -18,27 +19,31 @@ def trace_cable(wire, coord_list):
             while counter < u:
                 counter += 1
                 x = x+1
-                coord_list.append((x,y))
+                s = s+1
+                coord_list.append((x,y,s))
         elif str(a).startswith("L"):
             counter = 0
             while counter < u:
                 counter += 1
                 x = x-1
-                coord_list.append((x,y))
+                s = s+1
+                coord_list.append((x,y,s))
         elif str(a).startswith("U"):
             counter = 0
             while counter < u:
                 counter += 1
                 y = y+1
-                coord_list.append((x,y))
+                s = s+1
+                coord_list.append((x,y,s))
         else:
             counter = 0
             while counter < u:
                 counter += 1
                 y = y-1
-                coord_list.append((x,y))
+                s = s+1
+                coord_list.append((x,y,s))
 
-file_object = open("input.txt", "r")
+file_object = open("input1.txt", "r")
 line = (file_object.readline()).strip()
 
 while(line):
@@ -54,16 +59,27 @@ print("first_trace")
 trace_cable(second_wire, second_coords)
 print("second_trace")
 
-intersections = set(first_coords).intersection(second_coords)
+first_wire_intersections = []
+second_wire_intersections = []
 
-#print(intersections)
+for d in first_coords:
+    temp = int(first_coords.index(d))
+    if temp%100 == 0:
+        print(str(temp/len(first_coords)*100)+ "%")
+    for e in second_coords:
+        if e[0] == d[0] and e[1] == d[1]:
+            first_wire_intersections.append(e)
+            second_wire_intersections.append(d)
+
+print(first_wire_intersections)
+print(second_wire_intersections)
+      
+counter = 0
 distances = []
-                    
-for d in intersections:
-    dist = abs(d[0])+abs(d[1])
-    #print(dist)
+while counter < (len(first_wire_intersections)-1):
+    dist = first_wire_intersections[counter][2]+ second_wire_intersections[counter][2] 
     distances.append(dist)
-
-distances.sort()
+    counter += 1
+print(distances)
 
 print(distances[0])
